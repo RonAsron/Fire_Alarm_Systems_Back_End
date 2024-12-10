@@ -25,7 +25,14 @@ SECRET_KEY = 'django-insecure-0vjzii9b+3t9@@z-qwb#%4+t6n6$2-5*#9a8d(4^(bv$q0t8eb
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'https://fire-alarm-systems-back-end.onrender.com']
+# settings.py
+
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'yourdomain.com',  # ใส่ domain ของคุณถ้ามี
+    'fire-alarm-systems-back-end.onrender.com',  # เพิ่ม URL จาก Render
+]
 
 
 # Application definition

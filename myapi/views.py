@@ -4,22 +4,75 @@ from rest_framework import status
 from .models import DeviceData
 from .serializers import DeviceDataSerializer
 
-
 class DeviceDataList(APIView):
+    # GET: ดึงข้อมูลทั้งหมด
     def get(self, request):
-        """
-        ดึงข้อมูลทั้งหมดจาก database
-        """
         devices = DeviceData.objects.all()
         serializer = DeviceDataSerializer(devices, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    # POST: เพิ่มข้อมูลใหม่
     def post(self, request):
-        """
-        บันทึกข้อมูลใหม่จาก request
-        """
         serializer = DeviceDataSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # OPTIONS: ส่งคืน Headers สำหรับตรวจสอบ Methods ที่อนุญาต
+    def options(self, request, *args, **kwargs):
+        allowed_methods = ['GET', 'POST', 'OPTIONS']
+        headers = {'Allow': ', '.join(allowed_methods)}
+        return Response(headers, headers=headers, status=status.HTTP_200_OK)
+
+class DeviceDataDetail(APIView):
+    # GET: ดึงข้อมูลตาม ID
+    def get(self, request, id):
+        try:
+            device = DeviceData.objects.get(id=id)
+        except DeviceData.DoesNotExist:
+            return Response({"error": "Device not found"}, status=status.HTTP_404_NOT_FOUND)
+        serializer = DeviceDataSerializer(device)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    # PUT: อัพเดทข้อมูลทั้งหมดตาม ID
+    def put(self, request, id):
+        try:
+            device = DeviceData.objects.get(id=id)
+        except DeviceData.DoesNotExist:
+            return Response({"error": "Device not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = DeviceDataSerializer(device, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # PATCH: อัพเดทข้อมูลบางส่วนตาม ID
+    def patch(self, request, id):
+        try:
+            device = DeviceData.objects.get(id=id)
+        except DeviceData.DoesNotExist:
+            return Response({"error": "Device not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = DeviceDataSerializer(device, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # DELETE: ลบข้อมูลตาม ID
+    def delete(self, request, id):
+        try:
+            device = DeviceData.objects.get(id=id)
+        except DeviceData.DoesNotExist:
+            return Response({"error": "Device not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        device.delete()
+        return Response({"message": "Device deleted successfully"}, status=status.HTTP_200_OK)
+
+    # OPTIONS: ส่งคืน Headers สำหรับตรวจสอบ Methods ที่อนุญาต
+    def options(self, request, *args, **kwargs):
+        allowed_methods = ['GET', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
+        headers = {'Allow': ', '.join(allowed_methods)}
+        return Response(headers, headers=headers, status=status.HTTP_200_OK)

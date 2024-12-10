@@ -125,9 +125,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 # Static files configuration
+# URL สำหรับ Static Files
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+# Directories สำหรับการค้นหา Static Files
+STATICFILES_DIRS = [
+    BASE_DIR / "static",  # Path ไปยัง Directory ของ Static Files (หากมีไฟล์ใน local)
+]
+
+# Directory ที่จะใช้สำหรับ Static Files ใน Production
+STATIC_ROOT = BASE_DIR / "staticfiles"
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 

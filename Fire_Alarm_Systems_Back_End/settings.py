@@ -11,8 +11,6 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-import os
-import dj_database_url  # ต้องติดตั้งผ่าน requirements.txt
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,12 +20,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your-default-secret-key')  # ใช้จาก environment variables
+SECRET_KEY = 'django-insecure-0vjzii9b+3t9@@z-qwb#%4+t6n6$2-5*#9a8d(4^(bv$q0t8eb'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', 'False') == 'True'
+DEBUG = True
 
-ALLOWED_HOSTS = ['fire-alarm-systems-back-end.onrender.com', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'fire-alarm-systems-back-end.onrender.com']
+
 
 # Application definition
 
@@ -39,11 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'myapi',
+
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # สำหรับ static files บน production
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -74,13 +73,19 @@ WSGI_APPLICATION = 'Fire_Alarm_Systems_Back_End.wsgi.application'
 
 
 # Database
-# ใช้ DATABASE_URL จาก environment variables
+# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+
 DATABASES = {
-    'default': dj_database_url.config(default=f'sqlite:///{BASE_DIR / "db.sqlite3"}')
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
 
 # Password validation
+# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -98,6 +103,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # Internationalization
+# https://docs.djangoproject.com/en/5.1/topics/i18n/
+
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -108,11 +115,11 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+# https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-# Serve static files in production
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_URL = 'static/'
 
 # Default primary key field type
+# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

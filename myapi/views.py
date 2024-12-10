@@ -6,16 +6,14 @@ from .serializers import DeviceDataSerializer
 
 
 class DeviceDataList(APIView):
-    # ดึงข้อมูลจากฐานข้อมูล
-    def get(self, request):
-        devices = DeviceData.objects.all()
-        serializer = DeviceDataSerializer(devices, many=True)
-        return Response(serializer.data)
+    """
+    API endpoint สำหรับดึงข้อมูล Device Data
+    """
 
-    # เพิ่มข้อมูลใหม่
-    def post(self, request):
-        serializer = DeviceDataSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def get(self, request):
+        # ดึงข้อมูลจาก database
+        devices = DeviceData.objects.all()
+        # Serialize ข้อมูล
+        serializer = DeviceDataSerializer(devices, many=True)
+        # Return JSON response
+        return Response(serializer.data, status=status.HTTP_200_OK)

@@ -25,6 +25,7 @@ class DeviceDataList(APIView):
         headers = {'Allow': ', '.join(allowed_methods)}
         return Response(headers, headers=headers, status=status.HTTP_200_OK)
 
+
 class DeviceDataDetail(APIView):
     # GET: ดึงข้อมูลตาม ID
     def get(self, request, id):

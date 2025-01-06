@@ -1,23 +1,25 @@
 from django.contrib import admin
 from .models import DeviceData
 
-
 @admin.register(DeviceData)
 class DeviceDataAdmin(admin.ModelAdmin):
+    # การแสดงฟิลด์ในหน้า Admin
     list_display = (
         'name',
-        'esp_32',
+        'esp_8266_num1',  # MQ2 Data
+        'esp_8266_num2',  # MQ5 Data
         'gps_latitude',
         'gps_longitude',
-        'esp_8266_num1',
-        'esp_8266_num2',
-        'esp_8266_num3',
-        'esp_8266_num4',
-        'esp_8266_num5',
     )
+    
+    # การค้นหาในหน้า Admin
     search_fields = (
         'name',
-        'esp_32',
-        'esp_8266_num1',
+        'esp_8266_num1',  # ค้นหาข้อมูล MQ2
+        'esp_8266_num2',  # ค้นหาข้อมูล MQ5
     )
-    list_filter = ('esp_32', 'gps_latitude')
+    
+    # การกรองข้อมูลในหน้า Admin
+    list_filter = (
+        'gps_latitude',  # กรองข้อมูลตาม GPS Latitude
+    )

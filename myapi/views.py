@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.generics import get_object_or_404
 from .models import DeviceData
 from .serializers import DeviceDataSerializer
 
@@ -29,20 +30,13 @@ class DeviceDataList(APIView):
 class DeviceDataDetail(APIView):
     # GET: ดึงข้อมูลตาม ID
     def get(self, request, id):
-        try:
-            device = DeviceData.objects.get(id=id)
-        except DeviceData.DoesNotExist:
-            return Response({"error": "Device not found"}, status=status.HTTP_404_NOT_FOUND)
+        device = get_object_or_404(DeviceData, id=id)
         serializer = DeviceDataSerializer(device)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     # PUT: อัพเดทข้อมูลทั้งหมดตาม ID
     def put(self, request, id):
-        try:
-            device = DeviceData.objects.get(id=id)
-        except DeviceData.DoesNotExist:
-            return Response({"error": "Device not found"}, status=status.HTTP_404_NOT_FOUND)
-
+        device = get_object_or_404(DeviceData, id=id)
         serializer = DeviceDataSerializer(device, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -51,11 +45,7 @@ class DeviceDataDetail(APIView):
 
     # PATCH: อัพเดทข้อมูลบางส่วนตาม ID
     def patch(self, request, id):
-        try:
-            device = DeviceData.objects.get(id=id)
-        except DeviceData.DoesNotExist:
-            return Response({"error": "Device not found"}, status=status.HTTP_404_NOT_FOUND)
-
+        device = get_object_or_404(DeviceData, id=id)
         serializer = DeviceDataSerializer(device, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
@@ -64,11 +54,7 @@ class DeviceDataDetail(APIView):
 
     # DELETE: ลบข้อมูลตาม ID
     def delete(self, request, id):
-        try:
-            device = DeviceData.objects.get(id=id)
-        except DeviceData.DoesNotExist:
-            return Response({"error": "Device not found"}, status=status.HTTP_404_NOT_FOUND)
-
+        device = get_object_or_404(DeviceData, id=id)
         device.delete()
         return Response({"message": "Device deleted successfully"}, status=status.HTTP_200_OK)
 
